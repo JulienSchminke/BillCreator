@@ -1,6 +1,5 @@
 use std::fs::File;
 use std::io::BufWriter;
-use std::thread::current;
 use printpdf::{PdfDocument, Mm, BuiltinFont, PdfLayerReference, IndirectFontRef, Point, Line};
 use chrono::offset::Local;
 
@@ -88,13 +87,13 @@ fn main() {
     current_layer.use_text("Softwareleistung", 12.0, Mm(22.0 ), Mm(186.0), &font);
     current_layer.use_text("Preis"           , 12.0, Mm(162.0), Mm(186.0), &font);
 
-    current_layer.use_text("Free Food 4U Client Mobile App Version 0.2 (IOS & Android)", 12.0, Mm(22.0), Mm(180.0), &font);
-    current_layer.use_text("Aktueller Stundensatz: 17 Stunden a 30 €", 12.0, Mm(22.0), Mm(174.0), &font);
+    current_layer.use_text("Wetterapp (iOS und Android)", 12.0, Mm(22.0), Mm(180.0), &font);
+    current_layer.use_text("Aktueller Stundensatz: 17 Stunden a 50 €", 12.0, Mm(22.0), Mm(174.0), &font);
 
-    current_layer.use_text("Free Food 4U Scanner Mobile App Version 0.2 (IOS & Android)", 12.0, Mm(22.0), Mm(168.0), &font);
-    current_layer.use_text("Aktueller Stundensatz: 1 Stunden a 30 €", 12.0, Mm(22.0), Mm(162.0), &font);
+    current_layer.use_text("Telegram Bot (Linux)", 12.0, Mm(22.0), Mm(168.0), &font);
+    current_layer.use_text("Aktueller Stundensatz: 1 Stunden a 50 €", 12.0, Mm(22.0), Mm(162.0), &font);
 
-    current_layer.use_text("Farm Share Inventur Mobile App Version 1.0 (IOS & Android)", 12.0, Mm(22.0), Mm(156.0), &font);
+    current_layer.use_text("PasswordCardCreator (Linux)", 12.0, Mm(22.0), Mm(156.0), &font);
     current_layer.use_text("Aktueller Stundensatz: 19 Stunden a 50 €", 12.0, Mm(22.0), Mm(150.0), &font);
 
     current_layer.use_text("Rechnungsbetrag", 12.0, Mm(22.0), Mm(144.0), &font);
@@ -124,11 +123,11 @@ fn main() {
     current_layer.set_text_cursor(Mm(20.0), Mm(50.0));
     current_layer.write_text("Bankverbindung:", &font);
     current_layer.add_line_break();
-    current_layer.write_text("SPARDA-BANK West", &font);
+    current_layer.write_text("MUSTER-BANK West", &font);
     current_layer.add_line_break();
-    current_layer.write_text("IBAN: DE52 3606 0591 0001 8302 15", &font);
+    current_layer.write_text("IBAN: DE54 4654 5674 5656 5468 45", &font);
     current_layer.add_line_break();
-    current_layer.write_text("BIC: GENODED1SPE", &font);
+    current_layer.write_text("BIC: AASDFKL3SAD", &font);
 
     current_layer.end_text_section();
 
@@ -140,7 +139,7 @@ fn main() {
     current_layer.add_line_break();
     current_layer.write_text("Steuernummer: 5646545646", &font);
     current_layer.add_line_break();
-    current_layer.write_text("Email: programmer.skill.2022@gmail.com", &font);
+    current_layer.write_text("Email: julien.email@gmail.com", &font);
     current_layer.end_text_section();
 
     document.save(&mut BufWriter::new(File::create("rechnung.pdf").unwrap())).unwrap()
