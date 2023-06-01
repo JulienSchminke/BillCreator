@@ -1,0 +1,9 @@
+/Users/programmerskill/Desktop/rechnungsgenerator/target/debug/deps/encoding_index_simpchinese-7c24bac1a830eae2.rmeta: /Users/programmerskill/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding-index-simpchinese-1.20141219.5/lib.rs /Users/programmerskill/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding-index-simpchinese-1.20141219.5/gb18030.rs /Users/programmerskill/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding-index-simpchinese-1.20141219.5/gb18030_ranges.rs
+
+/Users/programmerskill/Desktop/rechnungsgenerator/target/debug/deps/libencoding_index_simpchinese-7c24bac1a830eae2.rlib: /Users/programmerskill/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding-index-simpchinese-1.20141219.5/lib.rs /Users/programmerskill/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding-index-simpchinese-1.20141219.5/gb18030.rs /Users/programmerskill/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding-index-simpchinese-1.20141219.5/gb18030_ranges.rs
+
+/Users/programmerskill/Desktop/rechnungsgenerator/target/debug/deps/encoding_index_simpchinese-7c24bac1a830eae2.d: /Users/programmerskill/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding-index-simpchinese-1.20141219.5/lib.rs /Users/programmerskill/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding-index-simpchinese-1.20141219.5/gb18030.rs /Users/programmerskill/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding-index-simpchinese-1.20141219.5/gb18030_ranges.rs
+
+/Users/programmerskill/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding-index-simpchinese-1.20141219.5/lib.rs:
+/Users/programmerskill/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding-index-simpchinese-1.20141219.5/gb18030.rs:
+/Users/programmerskill/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding-index-simpchinese-1.20141219.5/gb18030_ranges.rs:
