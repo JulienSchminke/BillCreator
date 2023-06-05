@@ -41,11 +41,6 @@ fn main() {
     current_layer.set_font(&font, 12.0);
     current_layer.set_text_cursor(Mm(20.0), Mm(288.0));
     current_layer.set_line_height(15.0);
-    /*current_layer.write_text("Julien Schminke", &font);
-    current_layer.add_line_break();
-    current_layer.write_text("Rottbruchstraße 106", &font);
-    current_layer.add_line_break();
-    current_layer.write_text("44625 Herne", &font);*/
     current_layer = write_text(current_layer, &font, "Max Sendemann\nSendestraße 101\n45678 Sendestadt");
 
     //recipient section
