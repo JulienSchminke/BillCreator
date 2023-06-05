@@ -16,6 +16,19 @@ fn add_current_date(layer: PdfLayerReference, font: &IndirectFontRef) -> PdfLaye
     layer
 }
 
+fn write_line(layer: PdfLayerReference, font: &IndirectFontRef, line: &str) -> PdfLayerReference {
+    layer.write_text(line, font);
+    layer.add_line_break();
+    layer
+}
+
+fn write_text(mut layer: PdfLayerReference, font: &IndirectFontRef, full_text: &str) -> PdfLayerReference {
+    for line in full_text.split("\n").collect::<Vec<&str>>().iter() {
+        layer = write_line(layer, font, *line);
+    }
+    layer
+}
+
 fn main() {
     let (document, page_index, layer_index) = PdfDocument::new("Rechnung", Mm(210.0), Mm(297.0), "Ebene");
     let font = document.add_builtin_font(BuiltinFont::TimesRoman).unwrap();
@@ -28,14 +41,15 @@ fn main() {
     current_layer.set_font(&font, 12.0);
     current_layer.set_text_cursor(Mm(20.0), Mm(288.0));
     current_layer.set_line_height(15.0);
-    current_layer.write_text("Julien Schminke", &font);
+    /*current_layer.write_text("Julien Schminke", &font);
     current_layer.add_line_break();
     current_layer.write_text("Rottbruchstraße 106", &font);
     current_layer.add_line_break();
-    current_layer.write_text("44625 Herne", &font);
+    current_layer.write_text("44625 Herne", &font);*/
+    current_layer = write_text(current_layer, &font, "Max Sendemann\nSendestraße 101\n45678 Sendestadt");
 
     //recipient section
-    for _ in 0..8 { current_layer.add_line_break(); }
+    for _ in 0..7 { current_layer.add_line_break(); }
     current_layer.write_text("Mustermann Consulting", &font);
     current_layer.add_line_break();
     current_layer.write_text("Musterstrasse 10", &font);
