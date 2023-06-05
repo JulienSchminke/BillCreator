@@ -29,6 +29,37 @@ fn write_text(mut layer: PdfLayerReference, font: &IndirectFontRef, full_text: &
     layer
 }
 
+fn create_table(layer: PdfLayerReference, font: &IndirectFontRef, text: Vec<Vec<&str>>, column_edge_ordinates: Vec<Mm>, top_border: Mm, bottom_border: Mm) -> PdfLayerReference {
+    for text_row in text {
+        assert_eq!(text_row.len(), column_edge_ordinates.len()-1);
+    }
+    assert_eq!(top_border > bottom_border, true);
+
+    //let left_border  = column_edge_ordinates.iter().min().unwrap();
+    //let right_border = column_edge_ordinates.iter().max().unwrap();
+    //let  left_line  = Line { points: vec![(Point::new(Mm(20.0 ), Mm(142.0)), false), (Point::new(Mm(20.0 ), Mm(190.0)), false)], is_closed: false, has_fill: false, has_stroke: true, is_clipping_path: false, };
+    //let middle_line = Line { points: vec![(Point::new(Mm(160.0), Mm(142.0)), false), (Point::new(Mm(160.0), Mm(190.0)), false)], is_closed: false, has_fill: false, has_stroke: true, is_clipping_path: false, };
+    //let  right_line = Line { points: vec![(Point::new(Mm(190.0), Mm(142.0)), false), (Point::new(Mm(190.0), Mm(190.0)), false)], is_closed: false, has_fill: false, has_stroke: true, is_clipping_path: false, };
+    let mut lines = Vec::new();
+    //vertical lines
+    for vertical_line_x_ordinate in column_edge_ordinates {
+        lines.push(Line {
+            points: vec![(Point::new(vertical_line_x_ordinate, top_border), false), (Point::new(vertical_line_x_ordinate, bottom_border), false)],
+            is_closed: false,
+            has_fill: false,
+            has_stroke: true,
+            is_clipping_path: false,
+        });
+    }
+
+    let mut horizontal_y_ordinates = Vec::new();
+    for row in text {
+
+    }
+
+    layer
+}
+
 fn main() {
     let (document, page_index, layer_index) = PdfDocument::new("Rechnung", Mm(210.0), Mm(297.0), "Ebene");
     let font = document.add_builtin_font(BuiltinFont::TimesRoman).unwrap();
@@ -45,25 +76,13 @@ fn main() {
 
     //recipient section
     for _ in 0..7 { current_layer.add_line_break(); }
-    current_layer.write_text("Mustermann Consulting", &font);
-    current_layer.add_line_break();
-    current_layer.write_text("Musterstrasse 10", &font);
-    current_layer.add_line_break();
-    current_layer.write_text("44444 Musterstadt", &font);
-    current_layer.add_line_break();
-    current_layer.add_line_break();
-    current_layer.add_line_break();
+    current_layer = write_text(current_layer, &font, "Mustermann Consulting\nMusterstraße 10\n44444 Musterstadt\n");
 
     //subject line
     current_layer.set_font(&subject_line_font, 12.0);
-    current_layer.write_text("RECHNUNG", &subject_line_font);
+    current_layer = write_text(current_layer, &subject_line_font, "RECHNUNG\n");
     current_layer.set_font(&font, 12.0);
-    current_layer.add_line_break();
-    current_layer.add_line_break();
-    current_layer.write_text("Sehr geehrter Kunde,", &font);
-    current_layer.add_line_break();
-    current_layer.write_text("wie vereinbart berechne ich für meine Leisung wie folgt:", &font);
-
+    current_layer = write_text(current_layer, &font, "Sehr geehrter Kunde,\n\nwie vereinbart berechne ich für meine Leistung wie folgt:");
     current_layer.end_text_section();
 
     //City and date
@@ -114,41 +133,17 @@ fn main() {
 
     current_layer.begin_text_section();
     current_layer.set_text_cursor(Mm(20.0), Mm(130.0));
-    current_layer.write_text("Der Betrag ist bitte bis zum 21.04.2023 auf das, unten stehende, Konto zu überweisen.", &font);
-    current_layer.add_line_break();
-    current_layer.add_line_break();
-    current_layer.write_text("Ich bedanke mich für den Auftrag und freue mich auf zukünftige Zusammenarbeit", &font);
-    current_layer.add_line_break();
-    current_layer.add_line_break();
-    current_layer.write_text("Hochachtungsvoll", &font);
-    current_layer.add_line_break();
-    current_layer.add_line_break();
-    current_layer.add_line_break();
-    current_layer.write_text("Julien Schminke", &font);
-
+    current_layer = write_text(current_layer, &font, "Der Betrag ist bitte bis zum 21.04.2023 auf das, unten stehende, Konto zu überweisen.\n\nHochachtungsvoll\n\n\nJulien Schminke");
     current_layer.end_text_section();
 
     current_layer.begin_text_section();
     current_layer.set_text_cursor(Mm(20.0), Mm(50.0));
-    current_layer.write_text("Bankverbindung:", &font);
-    current_layer.add_line_break();
-    current_layer.write_text("MUSTER-BANK West", &font);
-    current_layer.add_line_break();
-    current_layer.write_text("IBAN: DE54 4654 5674 5656 5468 45", &font);
-    current_layer.add_line_break();
-    current_layer.write_text("BIC: AASDFKL3SAD", &font);
-
+    current_layer = write_text(current_layer, &font, "Bankverbindung:\nMUSTER-BANK West\nIBAN: DE54 4654 5674 5656 5468 45\nBIC: AASDFKL3SAD");
     current_layer.end_text_section();
 
     current_layer.begin_text_section();
     current_layer.set_text_cursor(Mm(120.0), Mm(260.0));
-    current_layer.write_text("Rechnungsnummer: 00,00,0001", &font);
-    current_layer.add_line_break();
-    current_layer.write_text("Kundennummer: PG 01212", &font);
-    current_layer.add_line_break();
-    current_layer.write_text("Steuernummer: 5646545646", &font);
-    current_layer.add_line_break();
-    current_layer.write_text("Email: julien.email@gmail.com", &font);
+    current_layer = write_text(current_layer, &font, "Rechnungsnummer: 00,00,0001\nKundennummer: PG 01212\nSteuernummer: 5646545646\nEmail: julien.email@gmail.com");
     current_layer.end_text_section();
 
     document.save(&mut BufWriter::new(File::create("rechnung.pdf").unwrap())).unwrap()
