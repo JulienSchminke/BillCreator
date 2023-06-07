@@ -29,18 +29,31 @@ fn write_text(mut layer: PdfLayerReference, font: &IndirectFontRef, full_text: &
     layer
 }
 
-fn create_table(layer: PdfLayerReference, font: &IndirectFontRef, text: Vec<Vec<&str>>, column_edge_ordinates: Vec<Mm>, top_border: Mm, bottom_border: Mm) -> PdfLayerReference {
+fn create_table(layer: PdfLayerReference, font: &IndirectFontRef, font_size: f32, text: Vec<Vec<&str>>, column_edge_ordinates: Vec<Mm>, top_border: Mm) -> PdfLayerReference {
     for text_row in text {
         assert_eq!(text_row.len(), column_edge_ordinates.len()-1);
     }
-    assert_eq!(top_border > bottom_border, true);
+     let mut lines = Vec::new();
 
-    //let left_border  = column_edge_ordinates.iter().min().unwrap();
-    //let right_border = column_edge_ordinates.iter().max().unwrap();
-    //let  left_line  = Line { points: vec![(Point::new(Mm(20.0 ), Mm(142.0)), false), (Point::new(Mm(20.0 ), Mm(190.0)), false)], is_closed: false, has_fill: false, has_stroke: true, is_clipping_path: false, };
-    //let middle_line = Line { points: vec![(Point::new(Mm(160.0), Mm(142.0)), false), (Point::new(Mm(160.0), Mm(190.0)), false)], is_closed: false, has_fill: false, has_stroke: true, is_clipping_path: false, };
-    //let  right_line = Line { points: vec![(Point::new(Mm(190.0), Mm(142.0)), false), (Point::new(Mm(190.0), Mm(190.0)), false)], is_closed: false, has_fill: false, has_stroke: true, is_clipping_path: false, };
-    let mut lines = Vec::new();
+    //horizontal lines
+    let mut row_heights = Vec::new();
+    for row in text {
+        row_heights.push(row.iter().map( |text_block| text_block.split('\n').collect::<Vec<&str>>().len()).max().unwrap());
+    }
+    let left_border = column_edge_ordinates.min().unwrap();
+    let right_border = column_edge_ordinates.max().unwrap();
+    let bottom_border = top_border - row_heights.sum() * font_size / 2;
+    for height in row_heights {
+        let horizontal_x_ordinate = top_border - height * font_size / 2;
+        lines.push(Line {
+            points: vec![(Point::new(left_border, horizontal_x_ordinate), false), (Point::new(right_border, horizontal_x_ordinate), false)],
+            is_closed: false,
+            has_fill: false,
+            has_stroke: true,
+            is_clipping_path: false,
+        });
+    }
+
     //vertical lines
     for vertical_line_x_ordinate in column_edge_ordinates {
         lines.push(Line {
@@ -52,10 +65,19 @@ fn create_table(layer: PdfLayerReference, font: &IndirectFontRef, text: Vec<Vec<
         });
     }
 
-    let mut horizontal_y_ordinates = Vec::new();
-    for row in text {
-
+    for line in lines {
+        layer.add_shape(line);
     }
+
+    //text
+    /*for text_row in text {
+        for text_column in text_row {
+            layer.begin_text_section();
+            layer.set_text_cursor();
+            layer.end_text_section();
+        }
+    }*/
+
 
     layer
 }
@@ -88,6 +110,16 @@ fn main() {
     //City and date
     current_layer = add_current_date(current_layer, &font);
 
+    //table
+    current_layer = create_table(current_layer, &font, 12.0, vec![
+        vec!["Softwareleistung"                                                     , "Preis" ],
+        vec!["Wetterapp (iOS und Android)\nAktueller Stundensatz: 17 Stunden a 50 €", "510 €" ],
+        vec!["Telegram Bot (Linux)\nAktueller Stundensatz: 1 Stunden a 50 €"        , "30 €"  ],
+        vec!["PasswordCardCreator (Linux)\nAktueller Stundensatz: 19 Stunden a 50 €", "950 €" ],
+        vec!["Rechnungsbetrag"                                                      , "1490 €"],
+    ], vec![Mm(20.0), Mm(160.0), Mm(190.0)], Mm(190.0));
+
+    /*
     //Table
     //vertical lines
     let  left_line  = Line { points: vec![(Point::new(Mm(20.0 ), Mm(142.0)), false), (Point::new(Mm(20.0 ), Mm(190.0)), false)], is_closed: false, has_fill: false, has_stroke: true, is_clipping_path: false, };
@@ -145,6 +177,7 @@ fn main() {
     current_layer.set_text_cursor(Mm(120.0), Mm(260.0));
     current_layer = write_text(current_layer, &font, "Rechnungsnummer: 00,00,0001\nKundennummer: PG 01212\nSteuernummer: 5646545646\nEmail: julien.email@gmail.com");
     current_layer.end_text_section();
+    */
 
     document.save(&mut BufWriter::new(File::create("rechnung.pdf").unwrap())).unwrap()
 }
