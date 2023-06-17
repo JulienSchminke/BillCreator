@@ -1,4 +1,4 @@
-use genpdf::{Document, fonts, PaperSize, elements::{Text, Break, TableLayout, LinearLayout}, Margins, SimplePageDecorator, style::{Style, StyledString}, error::Error};
+use genpdf::{Document, fonts, PaperSize, elements::{Text, TableLayout, LinearLayout, FrameCellDecorator}, Margins, SimplePageDecorator, style::{Style, StyledString}, error::Error};
 
 fn write_text(doc: &mut Document, text: &str, text_style: Style) {
     for text_line in text.split("\n").collect::<Vec<&str>>().iter() {
@@ -7,9 +7,9 @@ fn write_text(doc: &mut Document, text: &str, text_style: Style) {
 }
 
 fn add_table_row_with_text(table: &mut TableLayout, text_for_columns: Vec<&str>, style_for_columns: Vec<Style>) -> Result<(), Error> {
-    assert_eq!(text_for_columns.len() == style_for_columns.len());
+    assert_eq!(text_for_columns.len(), style_for_columns.len());
     let mut table_row = table.row();
-    for i in 0..text_for_columns {
+    for i in 0..text_for_columns.len() {
         let mut linear_layout = LinearLayout::vertical();
         for text_line_for_column in text_for_columns[i].split("\n").collect::<Vec<&str>>().iter() {
             linear_layout.push(Text::new(StyledString::new(*text_line_for_column, style_for_columns[i])));
@@ -33,7 +33,7 @@ fn main() {
     write_text(&mut doc, "Sehr geehrter Kunde,\n\nwie vereinbart berechne ich für meine Leistung wie folgt:", Style::new());
 
     let mut table = TableLayout::new(vec![4, 1]);
-    table.set_cell_decorator(FramedCellDecorator::new(true, true, true));
+    table.set_cell_decorator(FrameCellDecorator::new(true, true, true));
 
     add_table_row_with_text(&mut table, vec!["Softwareleistung"                                                     , "Preis "], vec![Style::new(); 2]).unwrap();
     add_table_row_with_text(&mut table, vec!["Wetterapp (iOS und Android)\nAktueller Stundensatz: 17 Stunden a 50 €", "510  €"], vec![Style::new(); 2]).unwrap();
