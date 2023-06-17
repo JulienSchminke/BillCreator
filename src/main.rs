@@ -1,9 +1,22 @@
-use genpdf::{Document, fonts, PaperSize, elements::{Text, Break, TableLayout}, Margins, SimplePageDecorator, style::{Style, StyledString}};
+use genpdf::{Document, fonts, PaperSize, elements::{Text, Break, TableLayout, LinearLayout}, Margins, SimplePageDecorator, style::{Style, StyledString}, error::Error};
 
 fn write_text(doc: &mut Document, text: &str, text_style: Style) {
     for text_line in text.split("\n").collect::<Vec<&str>>().iter() {
         doc.push(Text::new(StyledString::new(*text_line, text_style)));
     }
+}
+
+fn add_table_row_with_text(table: &mut TableLayout, text_for_columns: Vec<&str>, style_for_columns: Vec<Style>) -> Result<(), Error> {
+    assert_eq!(text_for_columns.len() == style_for_columns.len());
+    let mut table_row = table.row();
+    for i in 0..text_for_columns {
+        let mut linear_layout = LinearLayout::vertical();
+        for text_line_for_column in text_for_columns[i].split("\n").collect::<Vec<&str>>().iter() {
+            linear_layout.push(Text::new(StyledString::new(*text_line_for_column, style_for_columns[i])));
+        }
+        table_row.push_element(linear_layout);
+    }
+    table_row.push()
 }
 
 fn main() {
@@ -22,6 +35,11 @@ fn main() {
     let mut table = TableLayout::new(vec![4, 1]);
     table.set_cell_decorator(FramedCellDecorator::new(true, true, true));
 
+    add_table_row_with_text(&mut table, vec!["Softwareleistung"                                                     , "Preis "], vec![Style::new(); 2]).unwrap();
+    add_table_row_with_text(&mut table, vec!["Wetterapp (iOS und Android)\nAktueller Stundensatz: 17 Stunden a 50 €", "510  €"], vec![Style::new(); 2]).unwrap();
+    add_table_row_with_text(&mut table, vec!["Telegram Bot (Linux)\nAktueller Stundensatz: 1 Stunden a 50 €"        , "30   €"], vec![Style::new(); 2]).unwrap();
+    add_table_row_with_text(&mut table, vec!["PasswordCardCreator (Linux)\nAktueller Stundensatz: 19 Stunden a 50 €", "950  €"], vec![Style::new(); 2]).unwrap();
+    add_table_row_with_text(&mut table, vec!["Rechnungsbetrag"                                                      , "1490 €"], vec![Style::new(); 2]).unwrap();
 
     doc.render_to_file("rechnung.pdf").unwrap();
 }
