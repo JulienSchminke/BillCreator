@@ -6,9 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-# printpdf = "0.5.3"
 genpdf = "0.2.0"
+email_address = "0.2.4"
 
+[dependencies.clap]
+version  = "4.3.4"
+features = ["derive"]
 
 [dependencies.chrono]
 version  = "0.4.25"
